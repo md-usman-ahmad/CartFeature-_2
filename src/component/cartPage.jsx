@@ -31,9 +31,8 @@ export function CartPage({ allCartItems }) {
           </div>
         </section>
       </div> }
-      {allCartItems.length > 0 &&  allCartItems.map( (item)=>{
-        return (
-            <>
+      {allCartItems.length > 0 &&  
+
                 <div class="table-demo justify-items-center">
                     <div class="md:w-3/4 ">
                         <div class="bg-white rounded-lg shadow-md p-6 mb-4">
@@ -47,21 +46,25 @@ export function CartPage({ allCartItems }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <CartCard {...item}></CartCard>
+                                    {allCartItems.map( (item)=>{
+                                       return  <CartCard {...item}></CartCard>
+                                    })}
                                 </tbody>
                             </table>
                             <div class="mt-6 pt-4 border-t">
                                 <div class="flex justify-between items-center">
                                     <span class="text-xl font-bold">Cart Total:</span>
-                                    <span class="text-2xl font-bold text-blue-600 cart-total">$7047</span>
+                                    <span class="text-2xl font-bold text-blue-600 cart-total">{allCartItems.map( (item)=>{
+                                        return item.quantity * item.price
+                                    }).reduce( (acc,currentValue)=>{
+                                        return acc + currentValue
+                                    })}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </>
-        )
-      })}
+        }
       
     </>
   );

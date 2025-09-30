@@ -1,4 +1,5 @@
-export function CartCard({id,imgsrc,title,Slogan,price,quantity}){
+import "./cartCard.css"
+export function CartCard({id,imgsrc,title,slogan,price,quantity}){
     return (
     <>
         <tr class="product-row border-b">
@@ -13,9 +14,9 @@ export function CartCard({id,imgsrc,title,Slogan,price,quantity}){
             <td class="py-4 font-semibold text-blue-600">₹{price}</td>
             <td class="py-4">
                 <div class="flex items-center">
-                    <button class="quantity-btn border rounded-md py-2 px-4 mr-2" data-action="decrease">-</button>
+                    <button class="quantity-btn border rounded-md py-2 px-4 mr-2 minus" data-action="decrease">-</button>
                     <span class="text-center w-8 quantity-display font-semibold">{quantity}</span>
-                    <button class="quantity-btn border rounded-md py-2 px-4 ml-2" data-action="increase">+</button>
+                    <button class="quantity-btn border rounded-md py-2 px-4 ml-2 plus" data-action="increase">+</button>
                 </div>
             </td>
             <td class="py-4 font-bold text-lg total-price">₹{price*quantity}</td>

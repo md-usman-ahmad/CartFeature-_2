@@ -1,19 +1,19 @@
 import { Navbar } from "./navbar";
 import { Home } from "./home.jsx";
-import {Electronics} from "./electronics.jsx"
+import { Electronics } from "./electronics.jsx";
 import { useState } from "react";
 import { CartPage } from "./cartPage.jsx";
 
 export function App() {
   const [CartState, setCartState] = useState({
-    allCartItems: [],   
-    currentDisplay: "Home",
+    allCartItems: [],
+    currentDisplay: "Electronics",
   });
   console.log("CartState = ", CartState);
 
-  let content
+  let content;
 
-// Now for each item, the number of times it has been added to the cart (i.e., its quantity) will be shown, and according to that, the price of each item will also be displayed.
+  // Now for each item, the number of times it has been added to the cart (i.e., its quantity) will be shown, and according to that, the price of each item will also be displayed.
   // function handleOnAddingAnItemToCart(id, imgsrc, title, price,noOfTimesClicked) {
   //   if(CartState.allCartItems.length === 0){
   //       setCartState((prevState) => {
@@ -40,7 +40,6 @@ export function App() {
   //           }
   //           return;
   //       })
-
 
   //       if(!check){
   //           setCartState((prevState) => {
@@ -72,37 +71,93 @@ export function App() {
   //           noOfCartItems: prevState.noOfCartItems+1
   //         };
   //       });
-  //       }   
+  //       }
   //   }
   // }
 
-  function handleCurrentDisplay(CurrentDisplayValue){
-    console.log("CurrentDisplayValue = ",CurrentDisplayValue);
-    setCartState( (prevState)=>{
+  function handleCurrentDisplay(CurrentDisplayValue) {
+    console.log("CurrentDisplayValue = ", CurrentDisplayValue);
+    setCartState((prevState) => {
       return {
         ...prevState,
-        currentDisplay: CurrentDisplayValue
-      }
-    })
+        currentDisplay: CurrentDisplayValue,
+      };
+    });
   }
-  function handleOnAddingAnItemToCart(){
 
+  function handleOnAddingAnItemToCart(id, imgsrc, title, slogan, price) {
+    if(CartState.allCartItems.length === 0){
+      setCartState((prevState) => {
+        return {
+          ...prevState,
+          allCartItems: [
+            ...prevState.allCartItems,
+            {
+              id,
+              imgsrc,
+              title,
+              slogan,
+              price,
+              quantity : 1,
+            },
+          ],
+        };
+      });
+    } else {
+      let arr = CartState.allCartItems.filter( (item)=>{
+        if(item.id === id) return true;
+      })
+      console.log("arr = ",arr);
+
+      if(arr.length > 0){
+        setCartState( (prevState)=>{
+          return {
+            ...prevState,
+            allCartItems: prevState.allCartItems.map( (item)=>{
+              if(item.id === id){
+                item.quantity = item.quantity + 1
+              }
+              return item
+            })
+          }
+        })
+      } else {
+        setCartState((prevState) => {
+          return {
+            ...prevState,
+            allCartItems: [
+              ...prevState.allCartItems,
+              {
+                id,
+                imgsrc,
+                title,
+                slogan,
+                price,
+                quantity : 1,
+              },
+            ],
+          };
+        });
+      }
+    }
   }
-  
-  if(CartState.currentDisplay === "Electronics"){
-    content = <Electronics onAddingAnItemToCart={handleOnAddingAnItemToCart}></Electronics>
-  } else if(CartState.currentDisplay === "Home"){
-    content = <Home ></Home>
-  } else if(CartState.currentDisplay === "CartPage"){
-    content = <CartPage allCartItems={CartState.allCartItems}></CartPage>
+
+  if (CartState.currentDisplay === "Electronics") {
+    content = (
+      <Electronics
+        onAddingAnItemToCart={handleOnAddingAnItemToCart}
+      ></Electronics>
+    );
+  } else if (CartState.currentDisplay === "Home") {
+    content = <Home></Home>;
+  } else if (CartState.currentDisplay === "CartPage") {
+    content = <CartPage allCartItems={CartState.allCartItems}></CartPage>;
   }
 
   return (
     <>
-      <Navbar currentDisplay={handleCurrentDisplay}
-      ></Navbar>
+      <Navbar currentDisplay={handleCurrentDisplay} allCartItems={CartState.allCartItems}></Navbar>
       {content}
-      
     </>
   );
 }
