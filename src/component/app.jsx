@@ -86,7 +86,7 @@ export function App() {
   }
 
   function handleOnAddingAnItemToCart(id, imgsrc, title, slogan, price) {
-    if(CartState.allCartItems.length === 0){
+    if (CartState.allCartItems.length === 0) {
       setCartState((prevState) => {
         return {
           ...prevState,
@@ -98,29 +98,29 @@ export function App() {
               title,
               slogan,
               price,
-              quantity : 1,
+              quantity: 1,
             },
           ],
         };
       });
     } else {
-      let arr = CartState.allCartItems.filter( (item)=>{
-        if(item.id === id) return true;
-      })
-      console.log("arr = ",arr);
+      let arr = CartState.allCartItems.filter((item) => {
+        if (item.id === id) return true;
+      });
+      console.log("arr = ", arr);
 
-      if(arr.length > 0){
-        setCartState( (prevState)=>{
+      if (arr.length > 0) {
+        setCartState((prevState) => {
           return {
             ...prevState,
-            allCartItems: prevState.allCartItems.map( (item)=>{
-              if(item.id === id){
-                item.quantity = item.quantity + 1
+            allCartItems: prevState.allCartItems.map((item) => {
+              if (item.id === id) {
+                item.quantity = item.quantity + 1;
               }
-              return item
-            })
-          }
-        })
+              return item;
+            }),
+          };
+        });
       } else {
         setCartState((prevState) => {
           return {
@@ -133,13 +133,36 @@ export function App() {
                 title,
                 slogan,
                 price,
-                quantity : 1,
+                quantity: 1,
               },
             ],
           };
         });
       }
     }
+  }
+  function handleOnRemovingAnItemToCart(id,quantity){
+    console.log("id = ",id, " quantity = ",quantity);
+    let updatedAllCartItems = [];
+    if(quantity > 1){
+      updatedAllCartItems = CartState.allCartItems.map( (item)=>{
+        if(item.id === id){
+          item.quantity = item.quantity - 1
+        }
+        return item;
+      })
+    } else{
+      updatedAllCartItems = CartState.allCartItems.filter( (item)=>{
+        if(item.id !== id) return true;
+      })
+    }
+
+    setCartState( (prevState)=>{
+      return {
+        ...prevState,
+        allCartItems: updatedAllCartItems
+      }
+    })
   }
 
   if (CartState.currentDisplay === "Electronics") {
@@ -151,12 +174,21 @@ export function App() {
   } else if (CartState.currentDisplay === "Home") {
     content = <Home></Home>;
   } else if (CartState.currentDisplay === "CartPage") {
-    content = <CartPage allCartItems={CartState.allCartItems}></CartPage>;
+    content = (
+      <CartPage
+        allCartItems={CartState.allCartItems}
+        onAddingAnItemToCart={handleOnAddingAnItemToCart}
+        onRemovingAnItemToCart={handleOnRemovingAnItemToCart}
+      ></CartPage>
+    );
   }
 
   return (
     <>
-      <Navbar currentDisplay={handleCurrentDisplay} allCartItems={CartState.allCartItems}></Navbar>
+      <Navbar
+        currentDisplay={handleCurrentDisplay}
+        allCartItems={CartState.allCartItems}
+      ></Navbar>
       {content}
     </>
   );

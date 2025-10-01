@@ -1,5 +1,5 @@
 import { CartCard } from "./cartCard";
-export function CartPage({ allCartItems }) {
+export function CartPage({ allCartItems , onAddingAnItemToCart , onRemovingAnItemToCart }) {
   return (
     <>
     {allCartItems.length === 0 && <div
@@ -47,7 +47,12 @@ export function CartPage({ allCartItems }) {
                                 </thead>
                                 <tbody>
                                     {allCartItems.map( (item)=>{
-                                       return  <CartCard {...item}></CartCard>
+                                       return  <CartCard 
+                                       {...item} 
+                                       onAddingAnItemToCart={onAddingAnItemToCart} 
+                                       onRemovingAnItemToCart={onRemovingAnItemToCart}
+                                       >
+                                       </CartCard>
                                     })}
                                 </tbody>
                             </table>
