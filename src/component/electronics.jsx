@@ -1,7 +1,7 @@
 import { products } from "../constants.js";
 import { ElectronicsCard } from "./electronicsCard.jsx";
 
-export function Electronics({ onAddingAnItemToCart,  }) {
+export function Electronics() {
   return (
     <>
       <div className="w-full flex flex-wrap justify-center mx-auto gap-3 p-4  ">
@@ -10,7 +10,6 @@ export function Electronics({ onAddingAnItemToCart,  }) {
             <ElectronicsCard  
               key={item.id}
               {...item}
-              onAddingAnItemToCart={onAddingAnItemToCart}
             ></ElectronicsCard>
           );
         })}

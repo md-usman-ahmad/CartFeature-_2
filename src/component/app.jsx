@@ -4,79 +4,18 @@ import { Electronics } from "./electronics.jsx";
 import { useState } from "react";
 import { CartPage } from "./cartPage.jsx";
 
+import {CartContext} from "../store/contextApi.js"
+
 export function App() {
   const [CartState, setCartState] = useState({
     allCartItems: [],
-    currentDisplay: "Electronics",
+    currentDisplay: "Home",
   });
   console.log("CartState = ", CartState);
 
   let content;
 
-  // Now for each item, the number of times it has been added to the cart (i.e., its quantity) will be shown, and according to that, the price of each item will also be displayed.
-  // function handleOnAddingAnItemToCart(id, imgsrc, title, price,noOfTimesClicked) {
-  //   if(CartState.allCartItems.length === 0){
-  //       setCartState((prevState) => {
-  //         return {
-  //           ...prevState,
-  //           allCartItems: [
-  //             ...prevState.allCartItems,
-  //             {
-  //               id,
-  //               imgsrc,
-  //               title,
-  //               price,
-  //               noOfTimesClicked: noOfTimesClicked+1
-  //             },
-  //           ],
-  //           noOfCartItems: prevState.noOfCartItems+1
-  //         };
-  //       });
-  //   } else{
-  //       let check=false;
-  //       const arr = CartState.allCartItems.forEach( (item)=>{
-  //           if(item.id === id){
-  //            check=true
-  //           }
-  //           return;
-  //       })
-
-  //       if(!check){
-  //           setCartState((prevState) => {
-  //               return {
-  //                   ...prevState,
-  //                   allCartItems: [
-  //                       ...prevState.allCartItems,
-  //                       {
-  //                           id,
-  //                           imgsrc,
-  //                           title,
-  //                           price,
-  //                           noOfTimesClicked: noOfTimesClicked+1
-  //                       }
-  //                   ],
-  //                   noOfCartItems: prevState.noOfCartItems+1
-  //               };
-  //           });
-  //       } else{
-  //           setCartState((prevState) => {
-  //         return {
-  //           ...prevState,
-  //           allCartItems: prevState.allCartItems.map( (item)=>{
-  //               if(item.id === id) {
-  //                   item.noOfTimesClicked = item.noOfTimesClicked + 1
-  //               }
-  //               return item;
-  //           }),
-  //           noOfCartItems: prevState.noOfCartItems+1
-  //         };
-  //       });
-  //       }
-  //   }
-  // }
-
   function handleCurrentDisplay(CurrentDisplayValue) {
-    console.log("CurrentDisplayValue = ", CurrentDisplayValue);
     setCartState((prevState) => {
       return {
         ...prevState,
@@ -84,7 +23,8 @@ export function App() {
       };
     });
   }
-
+  
+  // Now for each item, the number of times it has been added to the cart (i.e., its quantity) will be shown, and according to that, the price of each item will also be displayed.
   function handleOnAddingAnItemToCart(id, imgsrc, title, slogan, price) {
     if (CartState.allCartItems.length === 0) {
       setCartState((prevState) => {
@@ -141,7 +81,7 @@ export function App() {
       }
     }
   }
-  function handleOnRemovingAnItemToCart(id,quantity){
+  function handleOnRemovingAnItemFromCart(id,quantity){
     console.log("id = ",id, " quantity = ",quantity);
     let updatedAllCartItems = [];
     if(quantity > 1){
@@ -168,7 +108,6 @@ export function App() {
   if (CartState.currentDisplay === "Electronics") {
     content = (
       <Electronics
-        onAddingAnItemToCart={handleOnAddingAnItemToCart}
       ></Electronics>
     );
   } else if (CartState.currentDisplay === "Home") {
@@ -177,19 +116,23 @@ export function App() {
     content = (
       <CartPage
         allCartItems={CartState.allCartItems}
-        onAddingAnItemToCart={handleOnAddingAnItemToCart}
-        onRemovingAnItemToCart={handleOnRemovingAnItemToCart}
       ></CartPage>
     );
   }
 
   return (
     <>
-      <Navbar
-        currentDisplay={handleCurrentDisplay}
-        allCartItems={CartState.allCartItems}
-      ></Navbar>
-      {content}
+      <CartContext value={{
+        onAddingAnItemToCart : handleOnAddingAnItemToCart,
+        onRemovingAnItemFromCart : handleOnRemovingAnItemFromCart,
+        allCartItems : CartState.allCartItems
+      }}>
+        <Navbar
+          currentDisplay={handleCurrentDisplay}
+          allCartItems={CartState.allCartItems}
+        ></Navbar>
+        {content}
+      </CartContext>
     </>
   );
 }
